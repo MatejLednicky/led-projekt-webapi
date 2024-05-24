@@ -1,0 +1,206 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Ambulance Waiting List management for Web-In-Cloud system
+  version: "1.0.0"
+  title: Waiting List Api
+  contact:
+    email: xlednickym@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+ - name: ledTreatmentList
+   description: Treatment List API
+paths:
+ "/treatments":
+   get:
+     tags:
+       - ledTreatmentList
+     summary: Provides the list of all treatments
+     operationId: getTreatments
+     description: Get list of treatments
+     responses:
+       "200":
+         description: treatments list
+         content:
+           application/json:
+             schema:
+               type: array
+               items:
+                 $ref: "#/components/schemas/Treatment"
+             examples:
+               response:
+                 $ref: "#/components/examples/TreatmentsExample"
+   post:
+      tags:
+        - ledTreatmentList
+      summary: Create new treatment
+      operationId: createTreatment
+      description: Create new treatment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+            examples:
+              request-sample:
+                $ref: '#/components/examples/TreatmentExample'
+        description: Create new treatment
+        required: true
+      responses:
+        "200":
+          description: New treatment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+              examples:
+                updated-response:
+                  $ref: "#/components/examples/TreatmentsExample"
+ "/treatments/{treatmentId}":
+    get:
+      tags:
+        - ledTreatmentList
+      summary: Provides details about treatment
+      operationId: getTreatmentDetail
+      description: >-
+        By using treatmentId you can details of particular treatment.
+      parameters:
+        - in: path
+          name: treatmentId
+          description: pass the id of the particular treatment
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: value of the treatment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+              examples:
+                response:
+                  $ref: "#/components/examples/TreatmentExample"
+        "404":
+          description: Treatment with such ID does not exists
+    put:
+      tags:
+        - ledTreatmentList
+      summary: Updates specific treatment
+      operationId: updateTreatment
+      description: Use this method to update content of the treatment.
+      parameters:
+        - in: path
+          name: treatmentId
+          description: pass the id of the particular treatment
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Treatment"
+            examples:
+              request:
+                $ref: "#/components/examples/TreatmentExample"
+        description: Treatment to update
+        required: true
+      responses:
+        "200":
+          description: >-
+            updated treatment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+              examples:
+                response:
+                  $ref: "#/components/examples/TreatmentExample"
+        "403":
+          description: >-
+            Value of the treatmentId and the data id is mismatching. Details are
+            provided in the response body.
+        "404":
+          description: Treatment with such ID does not exists
+    delete:
+      tags:
+        - ledTreatmentList
+      summary: Deletes specific treatment
+      operationId: deleteTreatment
+      description: Use this method to delete the specific treatment.
+      parameters:
+        - in: path
+          name: treatmentId
+          description: pass the id of the particular treatment
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Treatment deleted
+        "404":
+          description: Treatment with such ID does not exists
+components:
+ schemas:
+   Treatment:
+     type: object
+     required: [id, patientId]
+     properties:
+       id:
+         type: string
+         example: x321ab3
+         description: Unique id of treatment
+       name:
+         type: string
+         example: Jožko Púčik
+         description: Name of patient
+       patientId:
+         type: string
+         example: 460527-jozef-pucik
+         description: Unique identifier of the patient known to Web-In-Cloud system
+       startDate:
+         type: string
+         format: date-time
+         example: "2038-12-24T10:05:00Z"
+         description: Timestamp when the treatment started
+       endDate:
+         type: string
+         format: date-time
+         example: "2038-12-24T10:35:00Z"
+         description: Timestamp when the treatment will end
+ examples:
+    TreatmentExample:
+      summary: Summary of treatment example
+      description: |
+        Example treatment
+      value:
+      - id: x321ab5
+        name: Janko Hraško
+        patientId: 230101-janko-hrasko
+        startDate: "2024-05-15T09:00:00.000Z"
+        endDate: "2024-12-24T10:15:00.000Z"
+    TreatmentsExample:
+      summary: List of treatments
+      description: |
+        Example treatments list containing 3 treatments
+      value:
+      - id: x321ab3
+        name: Jožko Púčik
+        patientId: 460527-jozef-pucik
+        startDate: "2024-01-01T10:05:00.000Z"
+        endDate: "2024-06-01T10:35:00.000Z"
+      - id: x321ab4
+        name: Ferdinand Trety
+        patientId: 780907-ferdinand-tre
+        startDate: "2024-02-01T10:25:00.000Z"
+        endDate: "2024-08-10T10:50:00.000Z"
+      - id: x321ab5
+        name: Janko Hraško
+        patientId: 230101-janko-hrasko
+        startDate: "2024-05-15T09:00:00.000Z"
+        endDate: "2024-12-24T10:15:00.000Z"
