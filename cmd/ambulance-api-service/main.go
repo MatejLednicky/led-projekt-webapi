@@ -6,6 +6,7 @@ import (
     "strings"
     "github.com/gin-gonic/gin"
     "github.com/MatejLednicky/led-projekt-webapi/api"
+	"github.com/MatejLednicky/led-projekt-webapi/internal/led_projekt"
 )
 
 func main() {
@@ -21,6 +22,7 @@ func main() {
     engine := gin.New()
     engine.Use(gin.Recovery())
     // request routings
+	led_projekt.AddRoutes(engine)
     engine.GET("/openapi", api.HandleOpenApi)
     engine.Run(":" + port)
 }
