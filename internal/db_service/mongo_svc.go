@@ -211,7 +211,6 @@ func (this *mongoSvc[DocType]) FindDocuments(ctx context.Context) ([]*DocType, e
     if err != nil {
         return nil, err
     }
-	defer client.Disconnect(ctx)
 
     db := client.Database(this.DbName)
     collection := db.Collection(this.Collection)
